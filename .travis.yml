@@ -8,4 +8,4 @@ node_js:
 
 before_script:
   - npm install -g grunt
-script: grunt build
+script: grunt ci
