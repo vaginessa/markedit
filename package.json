@@ -1,0 +1,43 @@
+{
+  "name": "markedit",
+  "version": "1.0.0",
+  "description": "Markdown widget",
+  "main": "index.js",
+  "dependencies": {
+    "marked": "^0.3.5"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "expect.js": "^0.3.1",
+    "grunt": "^1.0.1",
+    "grunt-babel": "^6.0.0",
+    "grunt-browser-sync": "^2.2.0",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha": "^1.0.2",
+    "mocha-jsdom": "^1.1.0",
+    "ngrok": "^2.2.2",
+    "sinon": "^1.17.4"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christiannwamba/markedit.git"
+  },
+  "keywords": [
+    "Markdown",
+    "JavaScript",
+    "Widget"
+  ],
+  "author": "Christian Nwamba",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/christiannwamba/markedit/issues"
+  },
+  "homepage": "https://github.com/christiannwamba/markedit#readme"
+}

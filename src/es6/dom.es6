@@ -1,0 +1,89 @@
+import { Handler } from './handler.es6';
+
+export class Dom{
+    constructor(controls, options){
+        this.document = document;
+        this.controls = controls;
+        this.options = options;
+        this.handler = new Handler(document);
+    }
+
+    makeWrapper(){
+        let wrapper = this.document.createElement('div');
+        wrapper.className = 'markedit';
+        wrapper.style.height = this.options.height;
+        wrapper.style.width = this.options.width;
+        wrapper.appendChild(this.makeControls());
+        wrapper.appendChild(this.makeText());
+        wrapper.appendChild(this.makePreview());
+        return wrapper;
+    }
+
+    makeIcon(icon, text){
+        let iconEl = this.document.createElement('i');
+        if(text){
+            iconEl.appendChild(this.document.createTextNode(text));
+        }
+        iconEl.className = `icon-${icon}`;
+        return iconEl;
+    }
+
+    makeControl(icon, className, text){
+        let control = this.document.createElement('a');
+        control.className = `markedit__control ${className}`;
+        control.appendChild(this.makeIcon(icon, text));
+        control.addEventListener('click', (e) => {
+            this.handler.dispatch(e, className+'Event')
+        })
+        return control;
+    }
+
+    makeDivider(){
+        let divider = this.document.createElement('span');
+        divider.className = 'markedit__divider';
+        return divider;
+    }
+
+    makeControls(){
+        let controls = this.controls;
+        let controlsEl = this.document.createElement('div');
+        controlsEl.className = 'markedit__controls';
+        controls.forEach((control) => {
+            if(controls.indexOf(control) % 3 === 0 && controls.indexOf(control) > 0){
+                controlsEl.appendChild(this.makeDivider());
+            }
+            controlsEl.appendChild(this.makeControl(control.icon, control.className, control.text));
+        });
+        return controlsEl;
+    }
+
+    makeText(){
+        let text = this.document.createElement('textarea');
+        let tHeight = text.clientHeight,
+            tWidth = text.clientWidth;
+        text.className = 'markedit__text';
+        text.style.resize = this.options.resize;
+        text.addEventListener('mousemove', (e) => {
+            if (tHeight !== text.clientHeight || tWidth !== text.clientWidth ) {
+                this.handler.dispatch(e, 'onResize', {width: text.clientWidth});
+            }
+        });
+        text.addEventListener('focus', (e) => {
+            if(this.options.onFocus){
+                this.options.onFocus(e)
+            }
+        });
+        text.addEventListener('blur', (e) => {
+            if(this.options.onBlur){
+                this.options.onBlur(e)
+            }
+        });
+        return text;
+    }
+
+    makePreview(){
+        let preview = this.document.createElement('div');
+        preview.className = 'markedit__preview';
+        return preview;
+    }
+}

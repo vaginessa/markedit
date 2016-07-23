@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="markedit.css">
+    </head>
+    <body>
+        <div class="page_wrap">
+            <div id="md"></div>
+        </div>
+        <script src="markedit.js"></script>
+        <script>
+//            var Markedit = require('./markedit.js');
+            var mk = new Markedit({container:'md', height:'400px', resize:'both', onFullScreen: function (e) {
+                console.log(e.target)
+            }});
+            console.log(mk)
+        </script>
+    </body>
+</html>
