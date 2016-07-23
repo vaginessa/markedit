@@ -68,4 +68,5 @@ module.exports = function (grunt) {
 
    grunt.registerTask("default", ["browserSync", "watch"]);
    grunt.registerTask("build", ["browserify", "sass", "mocha", "copy"]);
+   grunt.registerTask("ci", ["browserify", "mocha", "copy"]);
 };
