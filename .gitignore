@@ -2,3 +2,4 @@ node_modules
 mdtest.md
 .idea
 .sass-cache
+coverage/
