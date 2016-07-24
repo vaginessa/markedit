@@ -75,9 +75,6 @@ module.exports = function (grunt) {
             }
         },
         eslint: {
-            options: {
-                configFile: 'eslint.json'
-            },
             target: ['src/es6/*.es6']
         },
         mocha: {

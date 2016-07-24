@@ -1,5 +1,7 @@
-## Markedit ![Build](https://travis-ci.org/christiannwamba/markedit.svg?branch=master)
+## Markedit
 --------------------------
+
+[![Build Status](https://travis-ci.org/christiannwamba/markedit.svg?branch=master)](https://travis-ci.org/christiannwamba/markedit) [![npm version](https://badge.fury.io/js/markedit.svg)](https://www.npmjs.com/package/markedit)
 
 > Markedit is a simple JavaScript only markdown widget.
 

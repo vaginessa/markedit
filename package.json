@@ -4,8 +4,7 @@
   "description": "Markdown widget",
   "main": "index.js",
   "dependencies": {
-    "marked": "^0.3.5",
-    "request": "^2.74.0"
+    "marked": "^0.3.5"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
