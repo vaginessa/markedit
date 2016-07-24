@@ -1,0 +1,25 @@
+{
+  "name": "markedit",
+  "description": "Simple markdown widget",
+  "main": "dist/marked.js",
+  "authors": [
+    "Christian Nwamba"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "marked": "*"
+  },
+  "keywords": [
+    "Markdown",
+    "JavaScript",
+    "Widget"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

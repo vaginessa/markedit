@@ -1336,6 +1336,7 @@ var Dom = exports.Dom = function () {
             wrapper.appendChild(this.makeControls());
             wrapper.appendChild(this.makeText());
             wrapper.appendChild(this.makePreview());
+            wrapper.appendChild(this.makeUploader());
             return wrapper;
         }
     }, {
@@ -1390,8 +1391,8 @@ var Dom = exports.Dom = function () {
             var _this3 = this;
 
             var text = this.document.createElement('textarea');
-            var tHeight = text.clientHeight,
-                tWidth = text.clientWidth;
+            var tHeight = text.clientHeight;
+            var tWidth = text.clientWidth;
             text.className = 'markedit__text';
             text.style.resize = this.options.resize;
             text.addEventListener('mousemove', function (e) {
@@ -1417,6 +1418,22 @@ var Dom = exports.Dom = function () {
             var preview = this.document.createElement('div');
             preview.className = 'markedit__preview';
             return preview;
+        }
+    }, {
+        key: 'makeUploader',
+        value: function makeUploader() {
+            var _this4 = this;
+
+            var uploader = this.document.createElement('input');
+            uploader.setAttribute('id', 'markedit__upload');
+            uploader.setAttribute('type', 'file');
+            uploader.style.visibility = 'hidden';
+            uploader.style.height = '1px';
+            uploader.style.width = '1px';
+            uploader.addEventListener('change', function (e) {
+                _this4.handler.dispatch(e, 'newImage');
+            });
+            return uploader;
         }
     }]);
 
@@ -1502,7 +1519,6 @@ var Editor = exports.Editor = function () {
             var selectionEnd = editor.selectionEnd;
 
             var selectionText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
-
             editor.value = editor.value.substring(0, selectionStart) + selectionText + text + editor.value.substring(selectionEnd, editor.value.length);
             this.setSelectionRange(selectionEnd, selectionEnd);
         }
@@ -1523,10 +1539,9 @@ var Editor = exports.Editor = function () {
     }, {
         key: 'navigateLineStart',
         value: function navigateLineStart() {
-
             var currentPosition = this.editor.selectionStart;
             // Array of all words in textarea
-            var currentArray = this.editor.value.substr(0, currentPosition).split("\n");
+            var currentArray = this.editor.value.substr(0, currentPosition).split('\n');
             // Line number above current line
             var previousLineNumber = currentArray.length - 1;
             // Arrays of text above current line
@@ -1534,7 +1549,7 @@ var Editor = exports.Editor = function () {
             // Number of items in arrays of text above current line
             var previousArrayLength = previousArray.length;
             // Join all text above current line
-            var previousString = previousArray.join("");
+            var previousString = previousArray.join('');
             // Put together is the number index before beginning line
             var previousStringLength = previousString.length + previousArrayLength;
 
@@ -1543,14 +1558,14 @@ var Editor = exports.Editor = function () {
     }, {
         key: 'insertAtCursor',
         value: function insertAtCursor(myValue) {
-            //IE support
+            // IE support
             if (this.document.selection) {
                 this.editor.focus();
                 var sel = this.document.selection.createRange();
                 sel.text = myValue;
             }
-            //MOZILLA and others
-            else if (this.editor.selectionStart || this.editor.selectionStart == '0') {
+            // MOZILLA and others
+            else if (this.editor.selectionStart || this.editor.selectionStart === '0') {
                     var startPos = this.editor.selectionStart;
                     var endPos = this.editor.selectionEnd;
                     this.editor.value = this.editor.value.substring(0, startPos) + myValue + this.editor.value.substring(endPos, this.editor.value.length);
@@ -1584,14 +1599,18 @@ var Editor = exports.Editor = function () {
         }
     }, {
         key: 'insertImage',
-        value: function insertImage() {
+        value: function insertImage(e, url) {
             this.insertBeforeNode('![');
-            this.insertAfterNode(']()');
+            if (url) {
+                this.insertAfterNode('](' + url + ')');
+            } else {
+                this.insertAfterNode(']()');
+            }
         }
     }, {
         key: 'insertListOl',
         value: function insertListOl() {
-            this.insertBeforeText('  1');
+            this.insertBeforeText('  1.');
         }
     }, {
         key: 'insertListUl',
@@ -1666,8 +1685,9 @@ var Handler = exports.Handler = function () {
     _createClass(Handler, [{
         key: "dispatch",
         value: function dispatch(e, cType, payload) {
-
             if (window.CustomEvent) {
+                /*global CustomEvent :true*/
+                /*eslint no-undef: "error"*/
                 var event = new CustomEvent(cType, {
                     detail: payload,
                     bubbles: true,
@@ -1715,7 +1735,7 @@ var Markedit = function () {
     function Markedit(options) {
         _classCallCheck(this, Markedit);
 
-        var defaultOptions = { me: true, you: false };
+        var defaultOptions = { height: '400px', width: '800px' };
         this.options = Object.assign({}, defaultOptions, options);
 
         if (!this.options.container) {
@@ -1725,7 +1745,6 @@ var Markedit = function () {
         this.document = document;
         this.marked = _marked2.default;
         this.handler = new _handler.Handler(this.document);
-
         this.controls = [{ icon: 'bold', className: 'bold' }, { icon: 'italic', className: 'italic' }, { icon: 'header', className: 'header' }, { icon: 'link', className: 'link' }, { icon: 'code', className: 'code' }, { icon: 'image', className: 'image' }, { icon: 'list', className: 'listUl' }, { icon: 'list-ol', className: 'listOl' }, { text: '---', icon: 'line', className: 'line' }, { icon: 'quote-left', className: 'quote' }, { icon: 'eye', className: 'preview' }, { icon: 'fullscreen', className: 'fullscreen' }, { icon: 'question', className: 'help' }];
         this.buildDOM();
         this.attachEvents();
@@ -1737,6 +1756,7 @@ var Markedit = function () {
             var container = this.document.getElementById(this.options.container);
             this.dom = new _dom.Dom(this.controls, this.options);
             container.appendChild(this.dom.makeWrapper());
+            this.editor = new _editor.Editor(this.document, this.options);
         }
     }, {
         key: 'attachEvents',
@@ -1746,20 +1766,44 @@ var Markedit = function () {
             // console.log(this.editorEl);
             this.controls.forEach(function (val) {
                 _this.handler.handle(val.className + 'Event', function (e) {
-                    var editor = new _editor.Editor(_this.document, _this.options);
                     if (val.className === 'preview' || val.className === 'help' || val.className === 'fullscreen') {
-                        editor[val.className](e);
+                        _this.editor[val.className](e);
                     } else {
-                        editor['insert' + _utility.Utility.capitalizeFirstLetter(val.className)](e);
+                        if (_this.options.imageUrl && val.className === 'image') {
+                            _this.document.getElementById('markedit__upload').click();
+                        } else {
+                            _this.editor['insert' + _utility.Utility.capitalizeFirstLetter(val.className)](e);
+                        }
                     }
                 });
             });
 
             this.handler.handle('onResize', function (e) {
-                console.log('resize', e.detail.width);
                 var controlsEl = _this.document.querySelector('.markedit__controls');
                 controlsEl.style.width = e.detail.width;
             });
+
+            this.handler.handle('newImage', function (e) {
+                _this.handleImageUrlUpload(e, _this.options.imageUrl);
+            });
+        }
+    }, {
+        key: 'handleImageUrlUpload',
+        value: function handleImageUrlUpload(e, url) {
+            var _this2 = this;
+
+            /*global XMLHttpRequest FormData :true*/
+            var file = e.target.files[0];
+            console.log(e.target.files);
+            var fd = new FormData();
+            fd.append('image', file);
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function (ev) {
+                _this2.editor.insertImage(e, ev.target.response.image);
+            };
+            xhr.open('POST', url);
+            xhr.responseType = 'json';
+            xhr.send(fd);
         }
     }]);
 
@@ -1797,10 +1841,9 @@ var Utility = exports.Utility = function () {
             if (!element || !className) {
                 return;
             }
-
-            var classString = element.className,
-                nameIndex = classString.indexOf(className);
-            if (nameIndex == -1) {
+            var classString = element.className;
+            var nameIndex = classString.indexOf(className);
+            if (nameIndex === -1) {
                 classString += ' ' + className;
             } else {
                 classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);

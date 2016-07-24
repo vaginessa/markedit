@@ -1,6 +1,6 @@
 import marked from 'marked';
-import { Utility } from './utility.es6';
-import { Handler } from './handler.es6';
+import {Utility} from './utility.es6';
+import {Handler} from './handler.es6';
 
 export class Editor {
     constructor(document, options) {
@@ -16,14 +16,14 @@ export class Editor {
         this.insertAtCursor(text + ' ');
     }
 
-    insertAroundText(text){
+    insertAroundText(text) {
         let editor = this.editor;
         let selectionStart = editor.selectionStart;
         let selectionEnd = editor.selectionEnd;
 
         var selectionText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
 
-        if(selectionStart === selectionEnd){
+        if (selectionStart === selectionEnd) {
             selectionText = 'text';
         }
 
@@ -32,34 +32,29 @@ export class Editor {
         this.setSelectionRange(selectionEnd, selectionEnd);
     }
 
-    insertBeforeNode(text){
+    insertBeforeNode(text) {
         let editor = this.editor;
         let selectionStart = editor.selectionStart;
         let selectionEnd = editor.selectionEnd;
 
         var selectionText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
 
-        if(selectionStart === selectionEnd){
+        if (selectionStart === selectionEnd) {
             selectionText = 'text';
         }
 
         editor.value = editor.value.substring(0, selectionStart) + text + selectionText + editor.value.substring(selectionEnd, editor.value.length);
-
     }
 
-    insertAfterNode(text){
+    insertAfterNode(text) {
         let editor = this.editor;
         let selectionStart = editor.selectionStart;
         let selectionEnd = editor.selectionEnd;
 
         var selectionText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
-
-
         editor.value = editor.value.substring(0, selectionStart) + selectionText + text + editor.value.substring(selectionEnd, editor.value.length);
         this.setSelectionRange(selectionEnd, selectionEnd);
     }
-
-
 
     setSelectionRange(selectionStart, selectionEnd) {
         if (this.editor.setSelectionRange) {
@@ -76,10 +71,9 @@ export class Editor {
     }
 
     navigateLineStart() {
-
-        let currentPosition = this.editor.selectionStart
+        let currentPosition = this.editor.selectionStart;
         // Array of all words in textarea
-        let currentArray = this.editor.value.substr(0, currentPosition).split("\n");
+        let currentArray = this.editor.value.substr(0, currentPosition).split('\n');
         // Line number above current line
         let previousLineNumber = currentArray.length - 1;
         // Arrays of text above current line
@@ -87,7 +81,7 @@ export class Editor {
         // Number of items in arrays of text above current line
         let previousArrayLength = previousArray.length;
         // Join all text above current line
-        let previousString = previousArray.join("");
+        let previousString = previousArray.join('');
         // Put together is the number index before beginning line
         let previousStringLength = previousString.length + previousArrayLength;
 
@@ -95,19 +89,19 @@ export class Editor {
     }
 
     insertAtCursor(myValue) {
-        //IE support
+        // IE support
         if (this.document.selection) {
             this.editor.focus();
             let sel = this.document.selection.createRange();
             sel.text = myValue;
         }
-        //MOZILLA and others
-        else if (this.editor.selectionStart || this.editor.selectionStart == '0') {
+        // MOZILLA and others
+        else if (this.editor.selectionStart || this.editor.selectionStart === '0') {
             let startPos = this.editor.selectionStart;
             let endPos = this.editor.selectionEnd;
-            this.editor.value = this.editor.value.substring(0, startPos)
-                + myValue
-                + this.editor.value.substring(endPos, this.editor.value.length);
+            this.editor.value = this.editor.value.substring(0, startPos) +
+                myValue +
+                this.editor.value.substring(endPos, this.editor.value.length);
         } else {
             this.editor.value += myValue;
         }
@@ -120,63 +114,69 @@ export class Editor {
 
     insertBold() {
         const symbol = '__';
-        this.insertAroundText(symbol)
+        this.insertAroundText(symbol);
     }
 
     insertItalic() {
         const symbol = '*';
-        this.insertAroundText(symbol)
+        this.insertAroundText(symbol);
     }
 
     insertLink() {
-        this.insertBeforeNode('[')
-        this.insertAfterNode(']()')
+        this.insertBeforeNode('[');
+        this.insertAfterNode(']()');
     }
 
-    insertImage() {
-        this.insertBeforeNode('![')
-        this.insertAfterNode(']()')
+    insertImage(e, url) {
+        this.insertBeforeNode('![');
+        if (url) {
+            this.insertAfterNode(`](${url})`);
+        } else {
+            this.insertAfterNode(']()');
+        }
     }
 
-    insertListOl(){
-        this.insertBeforeText('  1');
+    insertListOl() {
+        this.insertBeforeText('  1.');
     }
-    insertListUl(){
+
+    insertListUl() {
         this.insertBeforeText('  *');
     }
 
-    insertCode(){
+    insertCode() {
         this.insertAroundText('```');
     }
-    insertLine(){
+
+    insertLine() {
         this.insertAfterNode('\n ------------------');
     }
-    insertQuote(){
+
+    insertQuote() {
         this.insertBeforeText('>');
     }
 
-    preview(e){
+    preview(e) {
         Utility.toggleClass(this.previewEl, 'open');
         this.previewEl.innerHTML = this.parse();
 
-        if(this.options.onPreview){
+        if (this.options.onPreview) {
             this.options.onPreview(e);
         }
     }
 
-    fullscreen(e){
+    fullscreen(e) {
         let container = this.document.querySelector('.markedit');
         let controlsEl = this.document.querySelector('.markedit__controls');
         Utility.toggleClass(container, 'fullscreen');
         controlsEl.style.width = container.clientWidth;
 
-        if(this.options.onFullScreen){
+        if (this.options.onFullScreen) {
             this.options.onFullScreen(e);
         }
-
     }
 
-    parse(){
+    parse() {
         return marked(this.editor.value, this.options.marked, this.options.markedHandler);
     }
 

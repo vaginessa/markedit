@@ -1,11 +1,13 @@
-export class Handler{
-    constructor(document){
+export class Handler {
+
+    constructor(document) {
         this.document = document;
     }
 
-    dispatch(e, cType, payload){
-
+    dispatch(e, cType, payload) {
         if (window.CustomEvent) {
+            /*global CustomEvent :true*/
+            /*eslint no-undef: "error"*/
             var event = new CustomEvent(cType, {
                 detail: payload,
                 bubbles: true,
@@ -15,7 +17,7 @@ export class Handler{
         }
     }
 
-    handle(cType, handlerFunc){
+    handle(cType, handlerFunc) {
         this.document.addEventListener(cType, handlerFunc, false);
     }
 

@@ -11692,6 +11692,7 @@ var Dom = exports.Dom = function () {
             wrapper.appendChild(this.makeControls());
             wrapper.appendChild(this.makeText());
             wrapper.appendChild(this.makePreview());
+            wrapper.appendChild(this.makeUploader());
             return wrapper;
         }
     }, {
@@ -11746,8 +11747,8 @@ var Dom = exports.Dom = function () {
             var _this3 = this;
 
             var text = this.document.createElement('textarea');
-            var tHeight = text.clientHeight,
-                tWidth = text.clientWidth;
+            var tHeight = text.clientHeight;
+            var tWidth = text.clientWidth;
             text.className = 'markedit__text';
             text.style.resize = this.options.resize;
             text.addEventListener('mousemove', function (e) {
@@ -11773,6 +11774,22 @@ var Dom = exports.Dom = function () {
             var preview = this.document.createElement('div');
             preview.className = 'markedit__preview';
             return preview;
+        }
+    }, {
+        key: 'makeUploader',
+        value: function makeUploader() {
+            var _this4 = this;
+
+            var uploader = this.document.createElement('input');
+            uploader.setAttribute('id', 'markedit__upload');
+            uploader.setAttribute('type', 'file');
+            uploader.style.visibility = 'hidden';
+            uploader.style.height = '1px';
+            uploader.style.width = '1px';
+            uploader.addEventListener('change', function (e) {
+                _this4.handler.dispatch(e, 'newImage');
+            });
+            return uploader;
         }
     }]);
 
@@ -11858,7 +11875,6 @@ var Editor = exports.Editor = function () {
             var selectionEnd = editor.selectionEnd;
 
             var selectionText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
-
             editor.value = editor.value.substring(0, selectionStart) + selectionText + text + editor.value.substring(selectionEnd, editor.value.length);
             this.setSelectionRange(selectionEnd, selectionEnd);
         }
@@ -11879,10 +11895,9 @@ var Editor = exports.Editor = function () {
     }, {
         key: 'navigateLineStart',
         value: function navigateLineStart() {
-
             var currentPosition = this.editor.selectionStart;
             // Array of all words in textarea
-            var currentArray = this.editor.value.substr(0, currentPosition).split("\n");
+            var currentArray = this.editor.value.substr(0, currentPosition).split('\n');
             // Line number above current line
             var previousLineNumber = currentArray.length - 1;
             // Arrays of text above current line
@@ -11890,7 +11905,7 @@ var Editor = exports.Editor = function () {
             // Number of items in arrays of text above current line
             var previousArrayLength = previousArray.length;
             // Join all text above current line
-            var previousString = previousArray.join("");
+            var previousString = previousArray.join('');
             // Put together is the number index before beginning line
             var previousStringLength = previousString.length + previousArrayLength;
 
@@ -11899,14 +11914,14 @@ var Editor = exports.Editor = function () {
     }, {
         key: 'insertAtCursor',
         value: function insertAtCursor(myValue) {
-            //IE support
+            // IE support
             if (this.document.selection) {
                 this.editor.focus();
                 var sel = this.document.selection.createRange();
                 sel.text = myValue;
             }
-            //MOZILLA and others
-            else if (this.editor.selectionStart || this.editor.selectionStart == '0') {
+            // MOZILLA and others
+            else if (this.editor.selectionStart || this.editor.selectionStart === '0') {
                     var startPos = this.editor.selectionStart;
                     var endPos = this.editor.selectionEnd;
                     this.editor.value = this.editor.value.substring(0, startPos) + myValue + this.editor.value.substring(endPos, this.editor.value.length);
@@ -11940,14 +11955,18 @@ var Editor = exports.Editor = function () {
         }
     }, {
         key: 'insertImage',
-        value: function insertImage() {
+        value: function insertImage(e, url) {
             this.insertBeforeNode('![');
-            this.insertAfterNode(']()');
+            if (url) {
+                this.insertAfterNode('](' + url + ')');
+            } else {
+                this.insertAfterNode(']()');
+            }
         }
     }, {
         key: 'insertListOl',
         value: function insertListOl() {
-            this.insertBeforeText('  1');
+            this.insertBeforeText('  1.');
         }
     }, {
         key: 'insertListUl',
@@ -12022,8 +12041,9 @@ var Handler = exports.Handler = function () {
     _createClass(Handler, [{
         key: "dispatch",
         value: function dispatch(e, cType, payload) {
-
             if (window.CustomEvent) {
+                /*global CustomEvent :true*/
+                /*eslint no-undef: "error"*/
                 var event = new CustomEvent(cType, {
                     detail: payload,
                     bubbles: true,
@@ -12069,10 +12089,9 @@ var Utility = exports.Utility = function () {
             if (!element || !className) {
                 return;
             }
-
-            var classString = element.className,
-                nameIndex = classString.indexOf(className);
-            if (nameIndex == -1) {
+            var classString = element.className;
+            var nameIndex = classString.indexOf(className);
+            if (nameIndex === -1) {
                 classString += ' ' + className;
             } else {
                 classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);
@@ -12223,15 +12242,15 @@ var _mochaJsdom = require('mocha-jsdom');
 
 var _mochaJsdom2 = _interopRequireDefault(_mochaJsdom);
 
-var _editor = require('../../src/es6/editor.es6');
-
 var _handler = require('../../src/es6/handler.es6');
+
+var _editor = require('../../src/es6/editor.es6');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import sinon from 'sinon';
 
-describe('Dom tests', function () {
+describe('Editor tests', function () {
 
     var editor = void 0,
         controls = void 0,
@@ -12251,7 +12270,51 @@ describe('Dom tests', function () {
             }
         };
 
-        editor = new _editor.Editor(controls, options);
+        editor = new _editor.Editor(document, options);
+    });
+
+    describe('constructor', function () {
+        it('construct', function () {
+            (0, _expect2.default)(editor.document).to.equal(document);
+            (0, _expect2.default)(editor.options).to.equal(options);
+            (0, _expect2.default)(editor.handler).to.be.a(_handler.Handler);
+        });
+    });
+
+    describe('insertBeforeText', function () {
+        it('insert before text');
+    });
+
+    describe('insertAroundText', function () {
+        it('insert around text', function () {
+            var text = '__';
+            var editorEl = document.createElement('textarea');
+            editor.editor = editorEl;
+            editor.editor.value = 'Hi Mark';
+            editor.editor.selectionStart = 0;
+            editor.editor.selectionEnd = 2;
+            editor.insertAroundText(text);
+            var editorElVal = editor.editor.value;
+            (0, _expect2.default)(editorElVal).to.be.ok();
+            // expect(editorElVal).to.be.eql('__Hi__ Mark');
+            console.log(editorElVal);
+        });
+    });
+
+    describe('insertBeforeNode', function () {
+        it('insert before node');
+    });
+
+    describe('insertAfterNode', function () {
+        it('insert after node');
+    });
+
+    describe('setSelectionRange', function () {
+        it('set selection range');
+    });
+
+    describe('navigateLineStart', function () {
+        it('navigate to line start');
     });
 });
 

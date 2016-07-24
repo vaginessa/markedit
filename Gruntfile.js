@@ -1,72 +1,101 @@
 module.exports = function (grunt) {
-   grunt.initConfig({
-      browserify: {
-         dist: {
+    grunt.initConfig({
+        browserify: {
+            dist: {
+                options: {
+                    transform: [
+                        ["babelify"]
+                    ]
+                },
+                files: {
+                    // if the source file has an extension of es6 then
+                    // we change the name of the source file accordingly.
+                    // The result file's extension is always .js
+                    "./builds/markedit.js": ["./index.js"],
+                    "./tests/index.test.js": ["./tests/es6/index.test.es6"]
+                }
+            }
+        },
+        sass: {
+            dist: {
+                files: {
+                    'builds/markedit.css': 'src/scss/app.scss'
+                }
+            }
+        },
+        cssmin: {
             options: {
-               transform: [
-                  ["babelify"]
-               ]
+                shorthandCompacting: false,
+                roundingPrecision: -1
             },
-            files: {
-               // if the source file has an extension of es6 then
-               // we change the name of the source file accordingly.
-               // The result file's extension is always .js
-               "./dist/markedit.js": ["./index.js"],
-               "./tests/index.test.js": ["./tests/es6/index.test.es6"]
+            target: {
+                files: {
+                    'builds/markedit.min.css': ['builds/markedit.css']
+                }
             }
-         }
-      },
-      sass: {
-         dist: {
-            files: {
-               'dist/markedit.css': 'src/scss/app.scss'
+        },
+        uglify: {
+            options: {
+                mangle: false
+            },
+            dist: {
+                files: {
+                    'builds/markedit.min.js': ['builds/markedit.js']
+                }
             }
-         }
-      },
-      copy: {
-            example: {  files: [{
+        },
+        copy: {
+            example: {
+                files: [{
                     expand: true,
-                    cwd: 'dist/',
+                    cwd: 'builds/',
                     src: ['**'],
                     dest: 'examples/'
-                }]},
-      },
-      browserSync: {
-         dev: {
-            bsFiles: {
-               src : [
-                  'examples/*.css',
-                  'examples/*.html',
-                  'examples/*.js'
-               ]
-            },
-            options: {
-               watchTask: true,
-               server: './examples'
+                }, {
+                    expand: true,
+                    cwd: 'builds/',
+                    src: ['markedit.js', 'markedit.css', 'markedit.min.js', 'markedit.min.css', 'fonts'],
+                    dest: 'dist/'
+                }]
             }
-         }
-      },
-      mocha: {
-         test: {
-            src: ['tests/index.html']
-         }
-      },
-      watch: {
-         scripts: {
-            files: ["./src/es6/*.es6", "./src/scss/*.scss", "./index.js", './tests/es6/*.es6'],
-            tasks: ["browserify", "sass", "mocha", "copy"]
-         }
-      }
-   });
+        },
+        browserSync: {
+            dev: {
+                bsFiles: {
+                    src: [
+                        'examples/*.css',
+                        'examples/*.html',
+                        'examples/*.js'
+                    ]
+                },
+                options: {
+                    watchTask: true,
+                    server: './examples'
+                }
+            }
+        },
+        eslint: {
+            options: {
+                configFile: 'eslint.json'
+            },
+            target: ['src/es6/*.es6']
+        },
+        mocha: {
+            test: {
+                src: ['tests/index.html']
+            }
+        },
+        watch: {
+            scripts: {
+                files: ["./src/es6/*.es6", "./src/scss/*.scss", "./index.js", './tests/es6/*.es6'],
+                tasks: ["build"]
+            }
+        }
+    });
 
-   grunt.loadNpmTasks("grunt-browserify");
-   grunt.loadNpmTasks("grunt-contrib-watch");
-   grunt.loadNpmTasks('grunt-contrib-copy');
-   grunt.loadNpmTasks('grunt-browser-sync');
-   grunt.loadNpmTasks('grunt-contrib-sass');
-   grunt.loadNpmTasks('grunt-mocha');
+    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-   grunt.registerTask("default", ["browserSync", "watch"]);
-   grunt.registerTask("build", ["browserify", "sass", "mocha", "copy"]);
-   grunt.registerTask("ci", ["browserify", "mocha", "copy"]);
+    grunt.registerTask("ci", ["eslint", "browserify", "mocha", "uglify", "cssmin", "copy"]);
+    grunt.registerTask("build", ["eslint", "browserify", "mocha", "sass", "uglify", "cssmin", "copy"]);
+    grunt.registerTask("default", ["browserSync", "watch"]);
 };

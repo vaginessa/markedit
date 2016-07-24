@@ -1,80 +1,5 @@
-@import 'https://fonts.googleapis.com/css?family=Raleway';
-
-@font-face {
-  font-family: 'icomoon';
-  src:    url('fonts/icomoon.eot?2qxul2');
-  src:    url('fonts/icomoon.eot?2qxul2#iefix') format('embedded-opentype'),
-  url('fonts/icomoon.ttf?2qxul2') format('truetype'),
-  url('fonts/icomoon.woff?2qxul2') format('woff'),
-  url('fonts/icomoon.svg?2qxul2#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
-[class^="icon-"], [class*=" icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-fullscreen:before {
-  content: "\e90b";
-}
-.icon-expand:before {
-  content: "\e90b";
-}
-.icon-question:before {
-  content: "\e900";
-}
-.icon-eye:before {
-  content: "\e901";
-}
-.icon-quote-left:before {
-  content: "\e902";
-}
-.icon-list-ol:before {
-  content: "\e903";
-}
-.icon-list:before {
-  content: "\e904";
-}
-.icon-image:before {
-  content: "\e905";
-}
-.icon-photo:before {
-  content: "\e905";
-}
-.icon-picture-o:before {
-  content: "\e905";
-}
-.icon-code:before {
-  content: "\e906";
-}
-.icon-chain:before {
-  content: "\e907";
-}
-.icon-link:before {
-  content: "\e907";
-}
-.icon-header:before {
-  content: "\e908";
-}
-.icon-italic:before {
-  content: "\e909";
-}
-.icon-bold:before {
-  content: "\e90a";
-}
-
+@import "markedstyle";
+@import "icomoon";
 
 
 html {
@@ -87,7 +12,6 @@ html {
 
 body {
   background: #F1F2F1;
-  font-family: 'Raleway', sans-serif;
 }
 
 .page_wrap {
@@ -98,12 +22,15 @@ body {
 .markedit {
   $controlsHeight: 70px;
   $contentPadding: 50px;
+  $border-radius: 5px;
 
   position: relative;
   height: 1000px;
 
+
+
   &.fullscreen{
-    width: 100%;
+    width: 100% !important;
     height: 100% !important;
     position: absolute;
     left: 0;
@@ -116,6 +43,8 @@ body {
     background: #fff;
     padding: 25px 50px;
     padding-bottom: 0px;
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
 
     .markedit__control {
       color: #bbb;
@@ -138,13 +67,16 @@ body {
     padding: $contentPadding;
     padding-top: 25px;
     outline: none;
-    font-size: 20px;
-    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    //font-family: 'Raleway', sans-serif;
+    font-family: Menlo, Monaco, Consolas, Lucida Console, dejavu sans mono, monospace;
     resize: none;
     height: 100%;
     overflow: auto;
-    overflow-y: auto;
-    overflow-x: auto;
+      white-space: nowrap;
+
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
         /***
     Based on:
     http://stackoverflow.com/questions/13126917/can-i-style-the-resize-grabber-of-textarea
@@ -159,10 +91,12 @@ body {
   }
 
   .markedit__preview {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     height: 70px;
     background: white;
     position: absolute;
     padding: $contentPadding;
+    padding-top: $contentPadding - 40;
     top: 0;
     left: 0;
     width: 100%;
@@ -170,8 +104,9 @@ body {
     margin-top: $controlsHeight;
     z-index: -1;
     overflow: auto;
-    overflow-y: auto;
-    overflow-x: auto;
+      white-space: nowrap;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
 
     &.open {
       z-index: 1;

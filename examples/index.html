@@ -8,8 +8,7 @@
         </div>
         <script src="markedit.js"></script>
         <script>
-//            var Markedit = require('./markedit.js');
-            var mk = new Markedit({container:'md', height:'400px', resize:'both', onFullScreen: function (e) {
+            var mk = new Markedit({container:'md', height:'400px', resize:'both', imageUrl:'http://localhost:1337/api/image', onFullScreen: function (e) {
                 console.log(e.target)
             }});
             console.log(mk)

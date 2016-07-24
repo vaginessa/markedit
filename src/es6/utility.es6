@@ -1,23 +1,19 @@
-export class Utility{
-    constructor(){
-        
-    }
-
+export class Utility {
     static capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    static toggleClass(element, className){
-        if (!element || !className){
+    static toggleClass(element, className) {
+        if (!element || !className) {
             return;
         }
-
-        var classString = element.className, nameIndex = classString.indexOf(className);
-        if (nameIndex == -1) {
+        let classString = element.className;
+        let nameIndex = classString.indexOf(className);
+        if (nameIndex === -1) {
             classString += ' ' + className;
         }
         else {
-            classString = classString.substr(0, nameIndex) + classString.substr(nameIndex+className.length);
+            classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);
         }
         element.className = classString;
     }
