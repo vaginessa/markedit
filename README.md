@@ -217,3 +217,6 @@ See the examples folder in this repository for a working demo
     * Test
     * Build
 7) Push and send in PR.
+
+## Credits
+[@chrizt_n](https://twitter.com/chrizt_n)
