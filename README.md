@@ -40,11 +40,18 @@ var markedit = new Markedit(options);
 Or
 
 ```html
-<script src="markedit.js"></script>
+<script src="dist/markedit.js"></script>
 <script>
     var markedit = new Markedit(options);
 </script>
 ```
+
+Include the css file:
+```html
+<link rel="stylesheet" href="dist/markedit.css">
+```
+
+`markedit.css` references the font files which is available in the dist folder. If you plan to go custom, see [Custom Styles](https://github.com/christiannwamba/markedit#custom-style)
 
 * Configure Options
 
@@ -73,7 +80,7 @@ var options = {
 | width      | Widget width      |   400px    |
 | imageUrl   | Endpoint for handling image upload    |   null    |
 | marked | [Marked](https://github.com/chjj/marked)'s configuration  object   |    null    |
-| markedHandler    | [Marked](https://github.com/chjj/marked)'s  callback    |   400px    |
+| markedHandler    | [Marked](https://github.com/chjj/marked)'s  callback    |   null    |
 | resizeable     | Determines if widget should be resizeable or not (`both`, `horizontal`, `vertical`, `none`) | none    |
 
 > Markedit uses [Marked](https://github.com/chjj/marked) to parse markdown. `options.marked` and `options.markedHandler` are passed as argument to Marked when parsing.
