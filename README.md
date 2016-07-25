@@ -207,16 +207,16 @@ See the examples folder in this repository for a working demo
 
 ## Contributing
 
-1) Fork the repository
-2) Clone to your workspace
-3) Run `npm install`
-4) Create a feature or bug fix branch
-5) Make changes
-6) Run `grunt` to:
+1. Fork the repository
+2. Clone to your workspace
+3. Run `npm install`
+4. Create a feature or bug fix branch
+5. Make changes
+6. Run `grunt` to:
     * Lint
     * Test
     * Build
-7) Push and send in PR.
+7. Push and send in PR.
 
 ## Credits
 [@chrizt_n](https://twitter.com/chrizt_n)
