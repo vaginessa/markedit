@@ -1,8 +1,6 @@
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import { Handler } from '../../src/es6/handler.es6';
 import { Editor } from '../../src/es6/editor.es6';
-// import sinon from 'sinon';
 
 describe('Editor tests', () => {
 
@@ -10,7 +8,6 @@ describe('Editor tests', () => {
     let editor, controls, options;
 
     beforeEach(() => {
-        jsdom();
         controls = [
             {icon: 'bold', className: 'bold'},
             {icon: 'italic', className: 'italic'},
@@ -65,7 +62,6 @@ describe('Editor tests', () => {
             let editorElVal = editor.editor.value;
             expect(editorElVal).to.be.ok();
             // expect(editorElVal).to.be.eql('__Hi__ Mark');
-            console.log(editorElVal);
         });
     }) ;
 

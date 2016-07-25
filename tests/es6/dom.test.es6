@@ -1,5 +1,4 @@
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {Dom} from '../../src/es6/dom.es6';
 import {Handler} from '../../src/es6/handler.es6';
 // import sinon from 'sinon';
@@ -10,7 +9,6 @@ describe('Dom tests', () => {
     let dom, controls, options;
 
     beforeEach(() => {
-        jsdom();
         controls = [
             {icon: 'bold', className: 'bold'},
             {icon: 'italic', className: 'italic'},

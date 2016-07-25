@@ -1,9 +1,7 @@
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import { Utility } from '../../src/es6/utility.es6';
 
 describe('Utilty tests', () => {
-    jsdom();
 
     let utility;
 
@@ -22,7 +20,7 @@ describe('Utilty tests', () => {
     describe('toggleClass', () => {
 
         let div = document.createElement('div');
-        
+
         it('add class if arguments', () => {
             div.className = 'container';
             Utility.toggleClass(div, 'open');

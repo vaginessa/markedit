@@ -1,10 +1,8 @@
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {Handler} from '../../src/es6/handler.es6';
 import sinon from 'sinon';
 
 describe('Handler tests', () => {
-    jsdom();
 
     let handler;
 

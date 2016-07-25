@@ -77,9 +77,9 @@ module.exports = function (grunt) {
         eslint: {
             target: ['src/es6/*.es6']
         },
-        mocha: {
+        karma: {
             test: {
-                src: ['tests/index.html']
+                configFile: 'karma.conf.js'
             }
         },
         watch: {
@@ -92,7 +92,7 @@ module.exports = function (grunt) {
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-    grunt.registerTask("ci", ["eslint", "browserify", "mocha", "uglify", "cssmin", "copy"]);
-    grunt.registerTask("build", ["eslint", "browserify", "mocha", "sass", "uglify", "cssmin", "copy"]);
+    grunt.registerTask("ci", ["eslint", "browserify", "karma", "uglify", "cssmin", "copy"]);
+    grunt.registerTask("build", ["eslint", "browserify", "karma", "sass", "uglify", "cssmin", "copy"]);
     grunt.registerTask("default", ["browserSync", "watch"]);
 };
